@@ -15,24 +15,31 @@
 		<div id="container"></div>
 
 		<script type="text/babel">
+	//Creates the comment component that sits inside the board
 	var Comment = React.createClass({
+		//Sets the initial states of the component
 		getInitialState: function() {
 			return {editing: false}
 		},
+		//sets the status of the comment to edit when edit button is clicked
 		edit: function() {
 			this.setState({
 				editing: true
 			});
 		},
+		//Removes the comment when Remove button is clicked
 		remove: function() {
 			this.props.deleteFromBoard(this.props.index);
 		},
+		//Saves the comment when in editing mode and the save button is clicked
 		save: function() {
 			this.setState({
 				editing: false
 			});
 			this.props.updateCommentText(this.refs.newText.value, this.props.index);
 		},
+		//Renders each comment and adds the edit and remove buttons
+		//Also attatches the edit and remove functions to the button
 		renderNormal: function() {
 			return (
 				<div className="commentContainer">
@@ -59,6 +66,7 @@
 		}
 	});
 
+	//The board is to organize the individual comments and to allow editing and deleting of comments
 	var Board = React.createClass({
 		getInitialState: function() {
 			return {
@@ -69,27 +77,31 @@
 				]
 			}
 		},
+		//The add function adds comments to the front of the array
 		add: function (text) {
 			var arr = this.state.comments;
-			arr.push(text);
+			arr.unshift(text);
 			this.setState({comments: arr});
 		},
+		//update the contents of the comment when clicking save, the function is passed as a property
 		updateComment: function(newText,i) {
 			var arr = this.state.comments;
 			arr[i] = newText;
 			this.setState({comments: arr});
 		},
+		//This function is passed to the Comment as a prop so that it knows how to remove the comment
 		removeComment: function(i) {
 			var arr = this.state.comments;
 			arr.splice(i, 1);
 			this.setState({comments: arr});
 		},
-
+		//creates each comment
 		eachComment: function(text, i){
 			return(<Comment key={i} index={i} updateCommentText={this.updateComment} deleteFromBoard={this.removeComment} >
 					{text}
 				</Comment>);
 		},
+		//Renders the board and maps each comment
 		render: function() {
 			return 	(
 				<div>
